@@ -1,0 +1,18 @@
+require 'vagrant-aws'
+require './aws_creds'
+profiles = Aws_Creds.new()
+creds=profiles.get_creds('default')
+Vagrant.configure('2') do |config|
+    config.vm.box = 'dummy'
+    config.vm.provider 'aws' do |aws, override|
+        aws.instance_type = 't2.micro'
+        aws.access_key_id = creds["aws_access_key_id"]
+        aws.secret_access_key = creds["aws_secret_access_key"]
+        aws.keypair_name = 'ssh-keypair-name'
+        aws.region = 'us-east-1'
+        aws.ami = 'ami-20be7540'
+        aws.security_groups = ['default']
+        override.ssh.username = 'ubuntu'
+        override.ssh.private_key_path = '~/.ssh/ssh-keypair-file'
+    end
+end
