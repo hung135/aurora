@@ -1,0 +1,57 @@
+admin_terminal:
+  deploy_yaml: deploy_admin_terminal.yml
+analytics_terminal:
+  deploy_yaml: deploy_analytics_terminal.yml
+app_server:
+  deploy_yaml: deploy_app_server.yml
+ci_agent:
+  deploy_yaml: deploy_gocd.yml
+ci_server:
+  deploy_yaml: deploy_gocd.yml
+ci_terminal:
+  deploy_yaml: deploy_gocd.yml
+citus_coordinator:
+  deploy_yaml: deploy_citus_server.yml
+citus_coordinator_standby:
+  deploy_yaml: deploy_citus_server.yml
+citus_worker:
+  deploy_yaml: deploy_citus_server.yml
+db_server:
+  deploy_yaml: deploy_db_server.yml
+db_terminal:
+  deploy_yaml: deploy_db_terminal.yml
+elasticsearch:
+  deploy_yaml: deploy_elastic_search.yml
+elk:
+  deploy_yaml: deploy_elk.yml
+file_server:
+  deploy_yaml: deploy_file_server.yml
+  additional_storage: 1024
+kerberos_server:
+  deploy_yaml: deploy_kerberos_server.yml
+mesos_agent:
+  deploy_yaml: deploy_mesos_agent.yml
+mesos_master:
+  deploy_yaml: deploy_mesos_master.yml
+neo4j_server:
+  deploy_yaml: deploy_neo4j_server.yml
+nginx_server:
+  deploy_yaml: config_nginx_proxy_server.yml
+proxy_server:
+  deploy_yaml: config_proxy_server.yml
+research_ancillary_services:
+  deploy_yaml: deploy_research_environment.yml
+research_eod:
+  deploy_yaml: deploy_research_environment.yml
+research_gauss:
+  deploy_yaml: deploy_research_environment.yml
+research_matlab:
+  deploy_yaml: deploy_research_environment.yml
+research_python:
+  deploy_yaml: deploy_research_environment.yml
+research_sas:
+  deploy_yaml: deploy_research_environment.yml
+research_spss:
+  deploy_yaml: deploy_research_environment.yml
+research_stata:
+  deploy_yaml: deploy_research_environment.yml
