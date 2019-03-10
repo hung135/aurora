@@ -9,6 +9,7 @@
 class Aws_Creds
     # return a dict with all groups passed in
     def get_creds(profile)
+
         @inventory[profile]
     end
     def initialize(file_path = "#{ENV["HOME"]}/.aws/credentials")

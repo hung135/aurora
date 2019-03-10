@@ -2,9 +2,105 @@
 # vi: set ft=ruby :
 require 'fileutils'
 require './inventory'
-inventory_groups = Inventory.new('./vagrant_hosts')
-skip_ansible = false
+require './aws_creds'
+# Please Make sure you run: vagrant plugin install vagrant-aws
+
+SKIP_ANSIBLE = false
 DOMAIN = 'test.dev'.freeze
+
+inventory_groups = Inventory.new('./vagrant_hosts')
+profiles = Aws_Creds.new
+creds = profiles.get_creds('default')
+
+Vagrant.configure(2) do |config|
+    config.vm.box = 'centos/7'
+    # config.vm.box = "alpine/alpine64"
+    config.vbguest.auto_update = false
+    ### COMMON VARIABLES
+
+    # First make sure that an .vault_password file exists, and if it doesn't
+    # then create an empty file
+    FileUtils.touch('.vault_password') unless File.file?('.vault_password')
+
+    # Constant var holding the root directory where this vagrantfile is being run
+    VAGRANT_ROOT = File.dirname(File.expand_path(__FILE__))
+    ansible_tags = ENV['TAGS']
+    ansible_verbosity = ENV['V']
+
+    ansible_extra_vars = if ENV['EXTRA_VARS']
+                             eval(ENV['EXTRA_VARS'])
+                         else
+                             {}
+                         end
+    ansible_limit = ENV['LIMIT']
+
+    # x = inventory_groups.get_hosts_by_groups(%w[file_server admin_terminal])
+    x = inventory_groups.get_hosts_by_groups(nil)
+
+    x.each do |_hosts_key, host_val|
+        host_val.each do |host|
+            hostname = host[:hostname]
+            ipv4 = host[:ipv4]
+
+            group_mapping = host[:group_mapping]
+            additional_storage = group_mapping['additional_storage']
+
+            # GlusterFS File Server 1
+
+            config.vm.define host[:hostname] do |mm_config|
+                hypenated = "#{hostname}.#{DOMAIN}".tr('_', '-')
+                mm_config.vm.hostname = hypenated
+                mm_config.vm.network :private_network, ip: ipv4
+                mm_config.ssh.forward_agent = true
+
+                # add_hard_drive(hostname, mm_config, additional_storage)
+
+                mm_config.vm.box = 'aws_dummy'
+                mm_config.vm.synced_folder '.', '/vagrant', disabled: true
+                mm_config.vm.provider 'aws' do |aws, override|
+                    aws.region = 'us-east-1'
+
+                    aws.instance_type = 't2.micro' # 't2.micro' #t2.medium
+                    aws.access_key_id = creds['aws_access_key_id']
+                    aws.secret_access_key = creds['aws_secret_access_key']
+                    aws.keypair_name = 'personal_ec2_hung135'
+                    aws.region = 'us-east-1'
+                    aws.ami = 'ami-011b3ccf1bd6db744' # redhat 7.6
+                    # aws.ami = 'ami-02da3a138888ced85'  #amazon ami
+                    # aws.ami = 'ami-0a313d6098716f372' # ubuntu 1804
+                    aws.security_groups = ['default']
+                    override.ssh.username = 'ec2-user'
+                    override.ssh.private_key_path = '~/.ssh/personal_ec2_hung135.pem'
+
+                    # aws.availability_zone = "us-east-1d"
+                    # aws.private_ip_address = "10.10.10.10"
+                    # aws.security_groups = ["sg-123z212d"]
+                    # aws.subnet_id = "subnet-23b9e7h1"
+
+                    aws.tags = {
+                        'Name' => 'Aurora_' + hostname,
+                        'Creator' => 'Hung',
+                        'hostname' => hostname
+                    }
+                end
+
+                if SKIP_ANSIBLE == false
+                    mm_config.vm.provision 'ansible' do |ansible|
+                        ansible.playbook = group_mapping['deploy_yaml']
+                        ansible.inventory_path = 'vagrant_hosts'
+                        ansible.tags = ansible_tags
+                        ansible.verbose = ansible_verbosity
+                        ansible.extra_vars = ansible_extra_vars
+                        ansible.limit = ansible_limit
+                    end
+                end
+            end
+        end
+    end
+end
+
+######################### Hellpers
+
 def add_hard_drive(*params)
     hostname = params[0]
     config = params[1]
@@ -26,70 +122,7 @@ def add_hard_drive(*params)
             end
         end
     end
-    config.vm.provider 'aws' do |v|
-
-        if  additional_storage > 0
-                puts "Adding HD for AWS...TBD"
-        end
-    end
-end
-Vagrant.configure(2) do |config|
-    config.vm.box = "centos/7"
-    #config.vm.box = "alpine/alpine64"
-    config.vbguest.auto_update = false
-    ### COMMON VARIABLES
-
-    # First make sure that an .vault_password file exists, and if it doesn't
-    # then create an empty file
-    FileUtils.touch('.vault_password') unless File.file?('.vault_password')
-
-    # Constant var holding the root directory where this vagrantfile is being run
-    VAGRANT_ROOT = File.dirname(File.expand_path(__FILE__))
-    ansible_tags = ENV['TAGS']
-    ansible_verbosity = ENV['V']
-
-    ansible_extra_vars = if ENV['EXTRA_VARS']
-                             eval(ENV['EXTRA_VARS'])
-                         else
-                             {}
-                         end
-    ansible_limit = ENV['LIMIT']
-
-    #x = inventory_groups.get_hosts_by_groups(%w[file_server admin_terminal])
-    x = inventory_groups.get_hosts_by_groups(nil)
-
-
-    x.each do |_hosts_key, host_val|
-        host_val.each do |host|
-            hostname = host[:hostname]
-            ipv4 = host[:ipv4]
-
-            group_mapping = host[:group_mapping]
-            additional_storage = group_mapping['additional_storage']
-
-            # GlusterFS File Server 1
-
-            config.vm.define host[:hostname] do |mm_config|
-                hypenated = "#{hostname}.#{DOMAIN}".tr('_', '-')
-                mm_config.vm.hostname = hypenated
-                mm_config.vm.network :private_network, ip: ipv4
-                mm_config.ssh.forward_agent = true
-
-                add_hard_drive(hostname, mm_config, additional_storage)
-
-                if skip_ansible == true
-                    mm_config.vm.provision 'ansible' do |ansible|
-
-                        ansible.playbook = group_mapping['deploy_yaml']
-                        ansible.inventory_path = 'vagrant_hosts'
-                        ansible.tags = ansible_tags
-                        ansible.verbose = ansible_verbosity
-                        ansible.extra_vars = ansible_extra_vars
-                        ansible.limit = ansible_limit
-                    end
-                end
-            end
-
-        end
+    config.vm.provider 'aws' do |_v|
+        puts 'Adding HD for AWS...TBD' if additional_storage > 0
     end
 end
