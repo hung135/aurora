@@ -11,7 +11,7 @@ DEFAULT_PROVIDER='aws'
 
 inventory_groups = Inventory.new('./vagrant_hosts')
 profiles = Aws_Creds.new
-creds = profiles.get_creds('personal')
+creds = profiles.get_creds('default')
 
 Vagrant.configure(2) do |config|
     config.vm.box = 'centos/7'
@@ -64,8 +64,8 @@ Vagrant.configure(2) do |config|
                     aws.instance_type = 't2.micro' # 't2.micro' #t2.medium
                     aws.access_key_id = creds['aws_access_key_id']
                     aws.secret_access_key = creds['aws_secret_access_key']
-                    aws.session_token = creds['aws_session_token']
-                    puts creds['aws_session_token']
+                    #aws.session_token = creds['aws_session_token'].to_s
+
                     aws.keypair_name = 'dev_ec2_key_pair'
                     aws.region = 'us-east-1'
                     aws.ami = 'ami-011b3ccf1bd6db744' # redhat 7.6
