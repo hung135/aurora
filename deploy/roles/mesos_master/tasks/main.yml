@@ -13,23 +13,28 @@
     - mesos
     - mesos-master
 
-- name: Install the CDH key
-  rpm_key:
-    key: http://archive.cloudera.com/cdh4/redhat/6/x86_64/cdh/RPM-GPG-KEY-cloudera
-    state: present
-  when: not 'production' in group_names
-  tags:
-    - mesos
-    - mesos-master
+# - name: Install the CDH key
+#   rpm_key:
+#     key: http://archive.cloudera.com/cdh4/redhat/6/x86_64/cdh/RPM-GPG-KEY-cloudera
+#     state: present
+#   when: not 'production' in group_names
+#   tags:
+#     - mesos
+#     - mesos-master
 
-- name: Add the CDH repository
-  command: "rpm -Uvh https://archive.cloudera.com/cdh5/one-click-install/redhat/7/x86_64/cloudera-cdh-5-0.x86_64.rpm"
-  args:
-    creates: /etc/yum.repos.d/cloudera-cdh5.repo
-  when: not 'production' in group_names
-  tags:
-    - mesos
-    - mesos-master
+# - name: Add the CDH repository
+#   command: "rpm -Uvh https://archive.cloudera.com/cdh5/one-click-install/redhat/7/x86_64/cloudera-cdh-5-0.x86_64.rpm"
+#   yum install https://archive.cloudera.com/cdh5/one-click-install/redhat/7/x86_64/cloudera-cdh-5-0.x86_64.rpm
+#   args:
+#     creates: /etc/yum.repos.d/cloudera-cdh5.repo
+#   when: not 'production' in group_names
+#   tags:
+#     - mesos
+#     - mesos-master
+- name: Install package.
+  yum:
+     name: https://archive.cloudera.com/cdh5/one-click-install/redhat/7/x86_64/cloudera-cdh-5-0.x86_64.rpm
+     state: present
 
 ### INSTALL MESOS MASTER PACKAGES
 
@@ -71,7 +76,7 @@
 - name: Install mesos and supporting packages
   yum:
     name: "{{ mesos_server_packages }}"
-    state: present
+    state: latest
   notify:
     - restart mesos-master
     - restart marathon
