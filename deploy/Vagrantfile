@@ -6,18 +6,16 @@ require './inventory'
 
 SKIP_ANSIBLE = false
 DOMAIN = 'test.dev'.freeze
-DEFAULT_PROVIDER='aws'
-KEY_PAIR_NAME = 'dev_key_pair'
-SSH_USERNAME = 'ec2-user'
+DEFAULT_PROVIDER = 'aws'.freeze
+KEY_PAIR_NAME = 'dev_key_pair'.freeze
+SSH_USERNAME = 'ec2-user'.freeze
 inventory_groups = Inventory.new('./vagrant_hosts')
-#profiles = Aws_Creds.new
-#creds = profiles.get_creds('default')
+# profiles = Aws_Creds.new
+# creds = profiles.get_creds('default')
 
 Vagrant.configure(2) do |config|
-    config.vm.box = 'centos/7' 
+    config.vm.box = 'centos/7'
     config.vbguest.auto_update = false
-    ### COMMON VARIABLES
-
     # First make sure that an .vault_password file exists, and if it doesn't
     # then create an empty file
     FileUtils.touch('.vault_password') unless File.file?('.vault_password')
@@ -33,7 +31,7 @@ Vagrant.configure(2) do |config|
                              {}
                          end
     ansible_limit = ENV['LIMIT']
- 
+
     x = inventory_groups.get_hosts_by_groups(nil)
 
     x.each do |_hosts_key, host_val|
@@ -43,7 +41,7 @@ Vagrant.configure(2) do |config|
 
             group_mapping = host[:group_mapping]
             additional_storage = group_mapping['additional_storage']
- 
+
             config.vm.define host[:hostname] do |mm_config|
                 hypenated = "#{hostname}.#{DOMAIN}".tr('_', '-')
                 mm_config.vm.hostname = hypenated
@@ -55,18 +53,18 @@ Vagrant.configure(2) do |config|
                 mm_config.vm.box = 'aws_dummy'
                 mm_config.vm.synced_folder '.', '/vagrant', disabled: true
                 mm_config.vm.provider 'aws' do |aws, override|
-                    #aws.region = 'us-east-1'
+                    # aws.region = 'us-east-1'
                     aws.instance_type = 't2.micro' # 't2.micro' #t2.medium
-                    #aws.associate_public_ip = false
-                    #aws.elastic_ip = 1.2.3.4
-                    #aws.access_key_id = creds['aws_access_key_id']
-                    #aws.secret_access_key = creds['aws_secret_access_key']
-                    #aws.session_token = creds['aws_session_token'].to_s
+                    # aws.associate_public_ip = false
+                    # aws.elastic_ip = 1.2.3.4
+                    # aws.access_key_id = creds['aws_access_key_id']
+                    # aws.secret_access_key = creds['aws_secret_access_key']
+                    # aws.session_token = creds['aws_session_token'].to_s
 
                     aws.keypair_name = KEY_PAIR_NAME
                     aws.ami = 'ami-011b3ccf1bd6db744' # redhat 7.6
-                    #aws.ami = 'ami-0199893068f89a449' # centos 7 minimal
-                    
+                    # aws.ami = 'ami-0199893068f89a449' # centos 7 minimal
+
                     # aws.ami = 'ami-02da3a138888ced85'  #amazon ami
                     # aws.ami = 'ami-0a313d6098716f372' # ubuntu 1804
                     # aws.security_groups = ['default']
@@ -85,16 +83,15 @@ Vagrant.configure(2) do |config|
                         'hostname' => hypenated
                     }
                 end
-              
-                    mm_config.vm.provision 'ansible' do |ansible|
-                        ansible.playbook = group_mapping['deploy_yaml']
-                        ansible.inventory_path = 'vagrant_hosts'
-                        ansible.tags = ansible_tags
-                        ansible.verbose = ansible_verbosity
-                        ansible.extra_vars = ansible_extra_vars
-                        ansible.limit = ansible_limit
-                    end
-                 
+
+                mm_config.vm.provision 'ansible' do |ansible|
+                    ansible.playbook = group_mapping['deploy_yaml']
+                    ansible.inventory_path = 'vagrant_hosts'
+                    ansible.tags = ansible_tags
+                    ansible.verbose = ansible_verbosity
+                    ansible.extra_vars = ansible_extra_vars
+                    ansible.limit = ansible_limit
+                end
             end
         end
     end
