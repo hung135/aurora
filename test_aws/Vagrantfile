@@ -16,7 +16,8 @@ Vagrant.configure('2') do |config|
         aws.ami = 'ami-011b3ccf1bd6db744' #redhat 7.6
         #aws.ami = 'ami-02da3a138888ced85'  #amazon ami
         #aws.ami = 'ami-0a313d6098716f372' # ubuntu 1804
-        aws.security_groups = ['default']
+        #aws.security_groups = ['default']
+        aws.security_group_id = ['sg-e3c04793']
         override.ssh.username = 'ec2-user'
         override.ssh.private_key_path = '~/.ssh/personal_ec2_hung135.pem'
         aws.tags = {
@@ -32,3 +33,4 @@ end
 # need to set smb
 # https://www.vagrantup.com/docs/synced-folders/smb.html
 # https :/ / github.com / mitchellh / vagrant - aws
+#https://github.com/mitchellh/vagrant-aws plugin doc

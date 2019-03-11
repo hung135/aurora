@@ -59,6 +59,19 @@ Vagrant.configure(2) do |config|
                 mm_config.vm.synced_folder '.', '/vagrant', disabled: true
                 mm_config.vm.provider 'aws' do |aws, override|
                     aws.region = 'us-east-1'
+                    if additional_storage > 0
+                        aws.block_device_mapping = [{
+                            'DeviceName' => '/dev/sda1',
+                            'Ebs.VolumeSize' => 100,
+                            'Ebs.VolumeType' => 'gp2',
+                            'Ebs.DeleteOnTermination' => 'true'
+                        },{
+                            'DeviceName' => '/dev/sda2',
+                            'Ebs.VolumeSize' => 100,
+                            'Ebs.VolumeType' => 'gp2',
+                            'Ebs.DeleteOnTermination' => 'true'
+                        }]
+                    end
 
                     aws.instance_type = 't2.micro' # 't2.micro' #t2.medium
                     aws.access_key_id = creds['aws_access_key_id']
@@ -68,14 +81,15 @@ Vagrant.configure(2) do |config|
                     aws.ami = 'ami-011b3ccf1bd6db744' # redhat 7.6
                     # aws.ami = 'ami-02da3a138888ced85'  #amazon ami
                     # aws.ami = 'ami-0a313d6098716f372' # ubuntu 1804
-                    aws.security_groups = ['default']
+                    # aws.security_groups = ['default']
+                    # aws.security_group_id = ['sg-e3c04793']
                     override.ssh.username = 'ec2-user'
                     override.ssh.private_key_path = '~/.ssh/personal_ec2_hung135.pem'
 
                     # aws.availability_zone = "us-east-1d"
-                    # aws.private_ip_address = "10.10.10.10"
+                    aws.private_ip_address = ipv4
                     # aws.security_groups = ["sg-123z212d"]
-                    # aws.subnet_id = "subnet-23b9e7h1"
+                    aws.subnet_id = 'subnet-2531f241'
 
                     aws.tags = {
                         'Name' => 'Aurora_' + hostname,
@@ -122,7 +136,7 @@ def add_hard_drive(*params)
             end
         end
     end
-    config.vm.provider 'aws' do |_v|
-        puts 'Adding HD for AWS...TBD' if additional_storage > 0
-    end
+    # config.vm.provider 'aws' do |aws|
+    #     aws.block_device_mapping = [{ 'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize' => 50 }]
+    # end
 end
