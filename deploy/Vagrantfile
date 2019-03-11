@@ -7,6 +7,7 @@ require './aws_creds'
 
 SKIP_ANSIBLE = false
 DOMAIN = 'test.dev'.freeze
+DEFAULT_PROVIDER='aws'
 
 inventory_groups = Inventory.new('./vagrant_hosts')
 profiles = Aws_Creds.new
@@ -53,25 +54,12 @@ Vagrant.configure(2) do |config|
                 mm_config.vm.network :private_network, ip: ipv4
                 mm_config.ssh.forward_agent = true
 
-                # add_hard_drive(hostname, mm_config, additional_storage)
+                add_hard_drive(hostname, mm_config, additional_storage)
 
                 mm_config.vm.box = 'aws_dummy'
                 mm_config.vm.synced_folder '.', '/vagrant', disabled: true
                 mm_config.vm.provider 'aws' do |aws, override|
                     aws.region = 'us-east-1'
-                    if additional_storage > 0
-                        aws.block_device_mapping = [{
-                            'DeviceName' => '/dev/sda1',
-                            'Ebs.VolumeSize' => 100,
-                            'Ebs.VolumeType' => 'gp2',
-                            'Ebs.DeleteOnTermination' => 'true'
-                        },{
-                            'DeviceName' => '/dev/sda2',
-                            'Ebs.VolumeSize' => 100,
-                            'Ebs.VolumeType' => 'gp2',
-                            'Ebs.DeleteOnTermination' => 'true'
-                        }]
-                    end
 
                     aws.instance_type = 't2.micro' # 't2.micro' #t2.medium
                     aws.access_key_id = creds['aws_access_key_id']
@@ -136,7 +124,19 @@ def add_hard_drive(*params)
             end
         end
     end
-    # config.vm.provider 'aws' do |aws|
-    #     aws.block_device_mapping = [{ 'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize' => 50 }]
-    # end
+    config.vm.provider 'aws' do |aws|
+        if additional_storage > 0
+            aws.block_device_mapping = [{
+                'DeviceName' => '/dev/sda1',
+                'Ebs.VolumeSize' => 10,
+                'Ebs.VolumeType' => 'gp2',
+                'Ebs.DeleteOnTermination' => 'true'
+            }, {
+                'DeviceName' => '/dev/sda2',
+                'Ebs.VolumeSize' => additional_storage,
+                'Ebs.VolumeType' => 'gp2',
+                'Ebs.DeleteOnTermination' => 'true'
+            }]
+        end
+    end
 end
