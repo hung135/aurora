@@ -10,8 +10,9 @@ Vagrant.configure('2') do |config|
 
         aws.instance_type = 't2.micro' #'t2.micro' #t2.medium
         aws.access_key_id = creds['aws_access_key_id']
+        puts creds['aws_secret_access_key']
         aws.secret_access_key = creds['aws_secret_access_key']
-        aws.keypair_name = 'personal_ec2_hung135'
+        aws.keypair_name = 'dev_ec2_key_pair'
         aws.region = 'us-east-1'
         #aws.ami = 'ami-011b3ccf1bd6db744' #redhat 7.6
         #aws.ami = 'ami-02da3a138888ced85'  #amazon ami
@@ -19,7 +20,7 @@ Vagrant.configure('2') do |config|
         #aws.security_groups = ['default']
 
         override.ssh.username = 'ubuntu'
-        override.ssh.private_key_path = '~/.ssh/personal_ec2_hung135.pem'
+        override.ssh.private_key_path = '~/.ssh/dev_ec2_key_pair.pem'
         aws.tags = {
 	  'Name' => 'Bastion_Deploy',
 	  'Creator' => 'Hung',
@@ -27,7 +28,14 @@ Vagrant.configure('2') do |config|
         }
     end
 end
-# aws ec2 create-key-pair --key-name dev_ec2_key_pair --dry-run --profile personal --region us-east-1 > ~/.ssh/dev_ec2_key_pair.pem
+
+aws ec2 delete-key-pair --key-name dev_ec2_key_pair
+aws --region us-east-1 ec2 create-key-pair --key-name "dev_ec2_key_pair" --output text  > ~/.ssh/dev_ec2_key_pair.pem
+chmod 400 ~/.ssh/dev_ec2_key_pair.pem
+
+#aws ec2 create-key-pair --key-name dev_ec2_key_pair --profile default --region us-east-1 --output text
+#aws ec2 create-key-pair --key-name dev_ec2_key_pair --query 'dev_ec2_key_pair' --output text > ~/.ssh/dev_ec2_key_pair.pem
+#aws ec2 create-key-pair --key-name dev_ec2_key_pair --profile default --region us-east-1 --output text
 
 # vagrant box add aws_dummy https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box
 # need to set smb
