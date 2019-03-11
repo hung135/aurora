@@ -2,17 +2,17 @@
 # vi: set ft=ruby :
 require 'fileutils'
 require './inventory'
-require './aws_creds'
+#require './aws_creds'
 # Please Make sure you run: vagrant plugin install vagrant-aws
 
 SKIP_ANSIBLE = false
 DOMAIN = 'test.dev'.freeze
 DEFAULT_PROVIDER='aws'
-KEY_PAIR_NAME = 'dev_keypair'
+KEY_PAIR_NAME = 'dev_key_pair'
 SSH_USERNAME = 'ec2-user'
 inventory_groups = Inventory.new('./vagrant_hosts')
 profiles = Aws_Creds.new
-creds = profiles.get_creds('default')
+#creds = profiles.get_creds('default')
 
 Vagrant.configure(2) do |config|
     config.vm.box = 'centos/7'
