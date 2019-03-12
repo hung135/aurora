@@ -8,6 +8,7 @@ ci_agent:
   deploy_yaml: deploy_gocd.yml
 ci_server:
   deploy_yaml: deploy_gocd.yml
+  ami: 'ami-e4eeb29b'
 ci_terminal:
   deploy_yaml: deploy_gocd.yml
 citus_coordinator:
@@ -33,6 +34,8 @@ mesos_agent:
   deploy_yaml: deploy_mesos_agent.yml
 mesos_master:
   deploy_yaml: deploy_mesos_master.yml
+  ami: 'ami-e4eeb29b'
+  instance_type: t2.medium
 neo4j_server:
   deploy_yaml: deploy_neo4j_server.yml
 nginx_server:
