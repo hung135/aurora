@@ -4,7 +4,7 @@ require 'fileutils'
 require './inventory'
 # Please Make sure you run: vagrant plugin install vagrant-aws
 
-SKIP_ANSIBLE = true
+skip_ansible = eval(ENV['skip_ansible']) ? ENV['skip_ansible'] : skip_ansible=false
 DOMAIN = 'test.dev'.freeze
 DEFAULT_PROVIDER = 'aws'.freeze
 #KEY_PAIR_NAME = 'dev_key_pair'.freeze
@@ -44,7 +44,7 @@ Vagrant.configure(2) do |config|
             group_mapping = host[:group_mapping]
             root_storage = group_mapping['root_storage']
             additional_storage = group_mapping['additional_storage']
-            ami=group_mapping['ami']
+            ami=group_mapping['ami']? group_mapping['ami'] : ami=[DEFAULT_AMI,SSH_USERNAME]
             instance_type=group_mapping['instance_type']
             
 
@@ -60,9 +60,11 @@ Vagrant.configure(2) do |config|
                 mm_config.vm.synced_folder '.', '/vagrant', disabled: true
                 mm_config.vm.provider 'aws' do |aws, override|
                     aws.keypair_name = KEY_PAIR_NAME
-                    aws.instance_type =instance_type ?  instance_type : aws.instance_type = nil
-                    aws.ami = ami[0] ?  ami : aws.ami = DEFAULT_AMI
-                    override.ssh.username = ami[1] ?  ami : override.ssh.username = SSH_USERNAME
+                     
+                    aws.instance_type =instance_type ? instance_type : aws.instance_type = nil
+                    aws.ami = ami[0]  
+                    override.ssh.username = ami[1] 
+                 
                     
                     
                     override.ssh.private_key_path = "~/.ssh/#{KEY_PAIR_NAME}.pem"
@@ -74,7 +76,7 @@ Vagrant.configure(2) do |config|
                         'hostname' => hypenated
                     }
                 end
-                if SKIP_ANSIBLE==false then
+                if skip_ansible==false then
                     mm_config.vm.provision 'ansible' do |ansible|
                         ansible.playbook = group_mapping['deploy_yaml']
                         ansible.inventory_path = 'vagrant_hosts'
