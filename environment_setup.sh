@@ -13,7 +13,7 @@ chmod 600 ~/.ssh/$key_pair_name.pem_bk
 aws --region us-east-1 ec2 delete-key-pair --key-name $key_pair_name
 aws --region us-east-1 ec2 create-key-pair --key-name "$key_pair_name" --output text > ~/.ssh/$key_pair_name.pem
 cp ~/.ssh/$key_pair_name.pem ~/.ssh/$key_pair_name.pem_bk
-sed -i 's/^.*----BEGIN/----BEGIN/' ~/.ssh/$key_pair_name.pem
+sed -i 's/^.*-----BEGIN/-----BEGIN/' ~/.ssh/$key_pair_name.pem
 sed -i 's/^-----END RSA PRIVATE KEY-----.*$/-----END RSA PRIVATE KEY-----/' ~/.ssh/$key_pair_name.pem
 chmod 400 ~/.ssh/$key_pair_name.pem 
  

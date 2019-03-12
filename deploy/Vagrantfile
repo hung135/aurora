@@ -42,6 +42,7 @@ Vagrant.configure(2) do |config|
             ipv4 = host[:ipv4]
 
             group_mapping = host[:group_mapping]
+            root_storage = group_mapping['root_storage']
             additional_storage = group_mapping['additional_storage']
             ami=group_mapping['ami']
             instance_type=group_mapping['instance_type']
@@ -53,15 +54,17 @@ Vagrant.configure(2) do |config|
                 mm_config.vm.network :private_network, ip: ipv4
                 mm_config.ssh.forward_agent = true
 
-                add_hard_drive(hostname, mm_config, additional_storage)
+                add_hard_drive(hostname, mm_config, group_mapping)
 
                 mm_config.vm.box = 'aws_dummy'
                 mm_config.vm.synced_folder '.', '/vagrant', disabled: true
                 mm_config.vm.provider 'aws' do |aws, override|
                     aws.keypair_name = KEY_PAIR_NAME
                     aws.instance_type =instance_type ?  instance_type : aws.instance_type = nil
-                    aws.ami = ami ?  ami : aws.ami = DEFAULT_AMI
-                    override.ssh.username = SSH_USERNAME
+                    aws.ami = ami[0] ?  ami : aws.ami = DEFAULT_AMI
+                    override.ssh.username = ami[1] ?  ami : override.ssh.username = SSH_USERNAME
+                    
+                    
                     override.ssh.private_key_path = "~/.ssh/#{KEY_PAIR_NAME}.pem"
                     aws.private_ip_address = ipv4
                     aws.subnet_id = SUBNET_ID
@@ -91,7 +94,10 @@ end
 def add_hard_drive(*params)
     hostname = params[0]
     config = params[1]
-    additional_storage = params[2]
+    group_mapping = params[2]
+    root_storage = group_mapping['root_storage']
+    additional_storage = group_mapping['additional_storage']
+    root_storage = 10 if root_storage.nil?
     additional_storage = 0 if additional_storage.nil?
     config.vm.provider 'virtualbox' do |v|
         if  additional_storage > 0
@@ -112,7 +118,7 @@ def add_hard_drive(*params)
         if additional_storage > 0
             aws.block_device_mapping = [{
                 'DeviceName' => '/dev/sda1',
-                'Ebs.VolumeSize' => 10,
+                'Ebs.VolumeSize' => root_storage,
                 'Ebs.VolumeType' => 'gp2',
                 'Ebs.DeleteOnTermination' => 'true'
             }, {
