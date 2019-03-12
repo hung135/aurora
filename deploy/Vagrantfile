@@ -4,17 +4,17 @@ require 'fileutils'
 require './inventory'
 # Please Make sure you run: vagrant plugin install vagrant-aws
 
-skip_ansible = eval(ENV['skip_ansible']) ? ENV['skip_ansible'] : skip_ansible=false
+skip_ansible = eval(ENV['skip_ansible']) ? ENV['skip_ansible'] : skip_ansible = false
 DOMAIN = 'test.dev'.freeze
 DEFAULT_PROVIDER = 'aws'.freeze
-#KEY_PAIR_NAME = 'dev_key_pair'.freeze
-KEY_PAIR_NAME=ENV['key_pair_name']
+# KEY_PAIR_NAME = 'dev_key_pair'.freeze
+KEY_PAIR_NAME = ENV['key_pair_name']
 SSH_USERNAME = 'ec2-user'.freeze
 inventory_groups = Inventory.new('./vagrant_hosts')
 # profiles = Aws_Creds.new
 # creds = profiles.get_creds('default')
-SUBNET_ID='subnet-222db645'
-DEFAULT_AMI='ami-011b3ccf1bd6db744'
+SUBNET_ID = 'subnet-222db645'.freeze
+DEFAULT_AMI = 'ami-011b3ccf1bd6db744'.freeze
 Vagrant.configure(2) do |config|
     config.vm.box = 'centos/7'
     config.vbguest.auto_update = false
@@ -44,9 +44,8 @@ Vagrant.configure(2) do |config|
             group_mapping = host[:group_mapping]
             root_storage = group_mapping['root_storage']
             additional_storage = group_mapping['additional_storage']
-            ami=group_mapping['ami']? group_mapping['ami'] : ami=[DEFAULT_AMI,SSH_USERNAME]
-            instance_type=group_mapping['instance_type']
-            
+            ami = group_mapping['ami'] || ami = [DEFAULT_AMI, SSH_USERNAME]
+            instance_type = group_mapping['instance_type']
 
             config.vm.define host[:hostname] do |mm_config|
                 hypenated = "#{hostname}.#{DOMAIN}".tr('_', '-')
@@ -60,23 +59,21 @@ Vagrant.configure(2) do |config|
                 mm_config.vm.synced_folder '.', '/vagrant', disabled: true
                 mm_config.vm.provider 'aws' do |aws, override|
                     aws.keypair_name = KEY_PAIR_NAME
-                     
-                    aws.instance_type =instance_type ? instance_type : aws.instance_type = nil
-                    aws.ami = ami[0]  
-                    override.ssh.username = ami[1] 
-                 
-                    
-                    
+
+                    aws.instance_type = instance_type || aws.instance_type = nil
+                    aws.ami = ami[0]
+                    override.ssh.username = ami[1]
+
                     override.ssh.private_key_path = "~/.ssh/#{KEY_PAIR_NAME}.pem"
                     aws.private_ip_address = ipv4
                     aws.subnet_id = SUBNET_ID
                     aws.tags = {
-                        'Name' => 'aurora-'+hostname,
+                        'Name' => 'aurora-' + hostname,
                         'Creator' => 'Hung',
                         'hostname' => hypenated
                     }
                 end
-                if skip_ansible==false then
+                if skip_ansible == false
                     mm_config.vm.provision 'ansible' do |ansible|
                         ansible.playbook = group_mapping['deploy_yaml']
                         ansible.inventory_path = 'vagrant_hosts'
@@ -102,7 +99,7 @@ def add_hard_drive(*params)
     root_storage = 10 if root_storage.nil?
     additional_storage = 0 if additional_storage.nil?
     config.vm.provider 'virtualbox' do |v|
-        if  additional_storage > 0
+        if additional_storage > 0
             disk_file_1 = File.join(VAGRANT_ROOT, "gfs_brick_1_#{hostname}.vdi")
 
             # VBoxManage storagectl  to list controllers
