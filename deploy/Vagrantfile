@@ -9,12 +9,14 @@ DOMAIN = 'test.dev'.freeze
 DEFAULT_PROVIDER = 'aws'.freeze
 # KEY_PAIR_NAME = 'dev_key_pair'.freeze
 KEY_PAIR_NAME = ENV['key_pair_name']
-SSH_USERNAME = 'ec2-user'.freeze
+DEFAULT_AMI = ['ami-011b3ccf1bd6db744','ec2-user']
+
+
 inventory_groups = Inventory.new('./vagrant_hosts')
 # profiles = Aws_Creds.new
 # creds = profiles.get_creds('default')
 SUBNET_ID = 'subnet-222db645'.freeze
-DEFAULT_AMI = 'ami-011b3ccf1bd6db744'.freeze
+
 Vagrant.configure(2) do |config|
     config.vm.box = 'centos/7'
     config.vbguest.auto_update = false
@@ -43,7 +45,7 @@ Vagrant.configure(2) do |config|
 
             group_mapping = host[:group_mapping]
             
-            ami = group_mapping['ami'] || ami = [DEFAULT_AMI, SSH_USERNAME]
+            ami = group_mapping['ami'] || ami =DEFAULT_AMI
             instance_type = group_mapping['instance_type']
 
             config.vm.define host[:hostname] do |mm_config|
@@ -59,7 +61,7 @@ Vagrant.configure(2) do |config|
                 mm_config.vm.provider 'aws' do |aws, override|
                     aws.keypair_name = KEY_PAIR_NAME
 
-                    aws.instance_type = instance_type || aws.instance_type = nil
+                    aws.instance_type = instance_type || aws.instance_type = 't2.micro'
                     aws.ami = ami[0]
                     override.ssh.username = ami[1]
 

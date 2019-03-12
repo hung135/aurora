@@ -6,9 +6,10 @@ app_server:
   deploy_yaml: deploy_app_server.yml
 ci_agent:
   deploy_yaml: deploy_gocd.yml
+  ami: ['ami-011b3ccf1bd6db744','ec2-user']
 ci_server:
   deploy_yaml: deploy_gocd.yml
-  ami: 'ami-e4eeb29b'
+  ami: ['ami-011b3ccf1bd6db744','ec2-user']
 ci_terminal:
   deploy_yaml: deploy_gocd.yml
 citus_coordinator:

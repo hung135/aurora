@@ -1,12 +1,12 @@
-#!bin/bash
+#!/bin/bash
 #setup for cloud9 Rehhat environment
-cd /etc/yum.repos.d/
-sudo wget http://download.opensuse.org/repositories/shells:fish:release:3/RHEL_7/shells:fish:release:3.repo
+#cd /etc/yum.repos.d/
+sudo wget http://download.opensuse.org/repositories/shells:fish:release:3/RHEL_7/shells:fish:release:3.repo /etc/yum.repos.d/
 sudo yum install -y fish 
 sudo yum install -y https://releases.hashicorp.com/vagrant/2.2.4/vagrant_2.2.4_x86_64.rpm
 sudo yum install -y ansible 
 
-git clone https://github.com/hung135/aurora
+#git clone https://github.com/hung135/aurora
 export key_pair_name=$HOSTNAME-$C9_USER
 chmod 600 ~/.ssh/$key_pair_name.pem
 chmod 600 ~/.ssh/$key_pair_name.pem_bk
@@ -20,8 +20,11 @@ chmod 400 ~/.ssh/$key_pair_name.pem
 vagrant box add aws_dummy https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box
 vagrant plugin install vagrant-aws
 vagrant plugin install vagrant-vbguest 
-echo abc >deploy/.vault.password
+echo "abc123" >./deploy/.vault.password
 echo 'export key_pair_name=$HOSTNAME-$C9_USER' >>~/.bash_profile
 git config credential.helper store
+aws configure
 
-#echo 'export key_pair_name=$HOSTNAME' >> ~/.bash_profile
+echo "Vagrant cannot connect to Instances make sure Security Groups are setup correctly for this Host:"
+echo "\t\t$HOSTNAME"
+source ~/.bash_profile
