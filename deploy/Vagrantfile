@@ -4,7 +4,7 @@ require 'fileutils'
 require './inventory'
 # Please Make sure you run: vagrant plugin install vagrant-aws
 
-skip_ansible = eval(ENV['skip_ansible']) ? ENV['skip_ansible'] : skip_ansible = false
+skip_ansible = (ENV['skip_ansible']) ? ENV['skip_ansible'] : skip_ansible = false
 DOMAIN = 'test.dev'.freeze
 DEFAULT_PROVIDER = 'aws'.freeze
 # KEY_PAIR_NAME = 'dev_key_pair'.freeze
@@ -42,8 +42,7 @@ Vagrant.configure(2) do |config|
             ipv4 = host[:ipv4]
 
             group_mapping = host[:group_mapping]
-            root_storage = group_mapping['root_storage']
-            additional_storage = group_mapping['additional_storage']
+            
             ami = group_mapping['ami'] || ami = [DEFAULT_AMI, SSH_USERNAME]
             instance_type = group_mapping['instance_type']
 
