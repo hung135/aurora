@@ -21,5 +21,6 @@ vagrant box add aws_dummy https://github.com/mitchellh/vagrant-aws/raw/master/du
 vagrant plugin install vagrant-aws
 vagrant plugin install vagrant-vbguest 
 echo abc >deploy/.vault.password
+git config credential.helper store
 
 #echo 'export key_pair_name=$HOSTNAME' >> ~/.bash_profile
