@@ -22,6 +22,8 @@ vagrant plugin install vagrant-aws
 vagrant plugin install vagrant-vbguest 
 echo "abc123" >./deploy/.vault_password
 echo 'export key_pair_name=$HOSTNAME-$C9_USER' >>~/.bash_profile
+echo 'export key_pair_path=~/.ssh/$key_pair_name.pem' >>~/.bash_profile
+
 echo 'fish' >>~/.bash_profile
 git config credential.helper store
 aws configure
@@ -29,3 +31,7 @@ aws configure
 echo "Vagrant cannot connect to Instances make sure Security Groups are setup correctly for this Host:"
 echo "      t$HOSTNAME"
 source ~/.bash_profile
+
+
+# ansible-playbook -i vagrant_hosts  --private-key=$key_pair_path -u centos \
+#  deploy_mesos_agent.yml --limit ='mesos_agent_1'

@@ -41,6 +41,13 @@
   tags:
     - mesos
     - mesos-agent
+- name: Remove Old Docker
+  command: "yum remove docker-engine* -y"
+ 
+  tags:
+    - mesos
+    - mesos-agent
+
 - name: Install Docker
   yum:
     name: docker

@@ -110,10 +110,3 @@
     append: yes
     groups: "{{ restricted_group_name }}"
 
-- name: Install EPEL repo
-  command: "rpm -ivh /tmp/{{ epel_rpm }}"
-  args:
-    creates: /etc/yum.repos.d/epel.repo
-  check_mode: no
-  tags:
-    - epel

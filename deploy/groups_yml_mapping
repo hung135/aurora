@@ -31,13 +31,16 @@ file_server:
   root_storage: 30
   additional_storage: 30 # Gbs
   instance_type: t2.micro
+  ami: ['ami-0063927a','centos']
 kerberos_server:
   deploy_yaml: deploy_kerberos_server.yml
 mesos_agent:
   deploy_yaml: deploy_mesos_agent.yml
+  ami: ['ami-0063927a','centos']
 mesos_master:
   deploy_yaml: deploy_mesos_master.yml
   instance_type: t2.medium
+  ami: ['ami-0063927a','centos']
 neo4j_server:
   deploy_yaml: deploy_neo4j_server.yml
 nginx_server:

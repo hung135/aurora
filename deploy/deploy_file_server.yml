@@ -23,12 +23,12 @@
     - name: Create the Filesystem
       filesystem:
         fstype: ext4
-        dev: /dev/sdb
+        dev: /dev/xvdb #this breaks virtual box
 
     - name: Mount volume
       mount:
         name: /data
-        src: /dev/sdb
+        src: /dev/xvdb
         fstype: ext4
         state: mounted
 

@@ -13,8 +13,8 @@
     creates: "/etc/yum.repos.d/Gluster.repo"
   when: ansible_distribution == 'Red Hat Enterprise Linux'
 
-- name: upgrade all packages
-  yum: name=* state=latest
+# - name: upgrade all packages
+#   yum: name=* state=latest
   
 - name: Install required GlusterFS Centos packages
   yum:
@@ -34,6 +34,7 @@
     name: glusterd
     enabled: yes
     state: started
+  when: ansible_distribution == 'CentOS' # what is service name for RHEL?
 
 - name: Open ports
   command: "iptables -I {{ iptables_chain }} 3 -m state --state NEW -p tcp --dport {{ item }} -j ACCEPT"
