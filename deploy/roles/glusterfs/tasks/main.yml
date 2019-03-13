@@ -6,12 +6,28 @@
   yum:
     name: centos-release-gluster41
     state: latest
-  when: not custom_repo
+  when: not custom_repo and ansible_distribution == 'CentOS' #or ansible_distribution == 'Red Hat Enterprise Linux'
 
-- name: Install required packages
+
+- name: Download Create Gluster Red Hat repo
+  #shell: "curl --silent --location {{jenkins_repo_url}} | sudo tee /etc/yum.repos.d/Gluster.repo"
+  shell: "wget -P /etc/yum.repos.d/ http://download.gluster.org/pub/gluster/glusterfs/LATEST/CentOS/glusterfs-epel.repo"
+  args:
+    creates: "/etc/yum.repos.d/Gluster.repo"
+  when: ansible_distribution == 'Red Hat Enterprise Linux'
+    
+- name: Install required GlusterFS Centos packages
   yum:
     name: glusterfs-server
     state: latest
+  when ansible_distribution == 'CentOS'
+
+- name: Install required GlusterFS Red-Hat packages
+  yum:
+    name: glusterfs
+    state: latest
+  when ansible_distribution == 'Red Hat Enterprise Linux'
+  
 
 - name: Enable gluster server
   service:

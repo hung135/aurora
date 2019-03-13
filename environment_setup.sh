@@ -20,11 +20,12 @@ chmod 400 ~/.ssh/$key_pair_name.pem
 vagrant box add aws_dummy https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box
 vagrant plugin install vagrant-aws
 vagrant plugin install vagrant-vbguest 
-echo "abc123" >./deploy/.vault.password
+echo "abc123" >./deploy/.vault_password
 echo 'export key_pair_name=$HOSTNAME-$C9_USER' >>~/.bash_profile
+echo 'fish' >>~/.bash_profile
 git config credential.helper store
 aws configure
 
 echo "Vagrant cannot connect to Instances make sure Security Groups are setup correctly for this Host:"
-echo "\t\t$HOSTNAME"
+echo "      t$HOSTNAME"
 source ~/.bash_profile

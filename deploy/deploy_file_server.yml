@@ -10,9 +10,10 @@
         state: latest
 
   roles:
+    - epel
     - {role: puppet_disable, when: "disable_puppet"}
     - iptables
-    - epel
+
     - ntp
     - glusterfs
     - {role: log-courier, when: "install_logstash"}

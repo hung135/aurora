@@ -7,3 +7,4 @@ skip_glusterfs: False
 
 log_file_locations:
   - /var/log/messages
+ 
