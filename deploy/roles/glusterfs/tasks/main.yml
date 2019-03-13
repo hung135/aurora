@@ -1,13 +1,10 @@
 # main.yml - Sets up a glusterfs file server node
 ---
- 
-
 - name: Install required packages
   yum:
     name: centos-release-gluster41
     state: latest
-  when: not custom_repo and ansible_distribution == 'CentOS' #or ansible_distribution == 'Red Hat Enterprise Linux'
-
+  when: not custom_repo and ansible_distribution == 'CentOS' 
 
 - name: Download Create Gluster Red Hat repo
   #shell: "curl --silent --location {{jenkins_repo_url}} | sudo tee /etc/yum.repos.d/Gluster.repo"
@@ -15,18 +12,21 @@
   args:
     creates: "/etc/yum.repos.d/Gluster.repo"
   when: ansible_distribution == 'Red Hat Enterprise Linux'
-    
+
+- name: upgrade all packages
+  yum: name=* state=latest
+  
 - name: Install required GlusterFS Centos packages
   yum:
     name: glusterfs-server
     state: latest
-  when ansible_distribution == 'CentOS'
+  when: ansible_distribution == 'CentOS'
 
 - name: Install required GlusterFS Red-Hat packages
   yum:
     name: glusterfs
     state: latest
-  when ansible_distribution == 'Red Hat Enterprise Linux'
+  when: ansible_distribution == 'Red Hat Enterprise Linux'
   
 
 - name: Enable gluster server
