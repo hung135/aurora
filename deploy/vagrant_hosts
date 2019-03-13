@@ -2,66 +2,66 @@
 
 ; Shared Component
 [admin_terminal]
-admin_terminal ansible_ssh_host=172.31.0.2
+admin_terminal ansible_ssh_host=10.1.128.2
 
 [file_server]
-file_server_1 ansible_ssh_host=172.31.0.4
-file_server_2 ansible_ssh_host=172.31.0.5
-file_server_3 ansible_ssh_host=172.31.1.4
-file_server_4 ansible_ssh_host=172.31.1.5
+file_server_1 ansible_ssh_host=10.1.128.4
+file_server_2 ansible_ssh_host=10.1.128.5
+file_server_3 ansible_ssh_host=10.1.129.4
+file_server_4 ansible_ssh_host=10.1.129.5
 
 [proxy_server]
-proxy_server ansible_ssh_host=172.31.0.3
+proxy_server ansible_ssh_host=10.1.128.3
 
 [nginx_server]
-nginx_server ansible_ssh_host=172.31.0.128
+nginx_server ansible_ssh_host=10.1.128.128
 
 [kerberos_server]
-kerberos_server ansible_ssh_host=172.31.0.127
+kerberos_server ansible_ssh_host=10.1.128.127
 
 ; Analytics Component
 [analytics_terminal]
-analytics_terminal ansible_ssh_host=172.31.0.12 rstudio_domain_name=https://rstudio.test.dev/
+analytics_terminal ansible_ssh_host=10.1.128.12 rstudio_domain_name=https://rstudio.test.dev/
 
 [elasticsearch]
-es1 ansible_ssh_host=172.31.0.13
-es2 ansible_ssh_host=172.31.0.14
-es3 ansible_ssh_host=172.31.0.15
+es1 ansible_ssh_host=10.1.128.13
+es2 ansible_ssh_host=10.1.128.14
+es3 ansible_ssh_host=10.1.128.15
 
 [elk]
-elk ansible_ssh_host=172.31.0.16 es_http_enabled=True
+elk ansible_ssh_host=10.1.128.16 es_http_enabled=True
 
 [app_server]
-app ansible_ssh_host=172.31.0.17
+app ansible_ssh_host=10.1.128.17
 
 [neo4j_server]
-neo4j1 ansible_ssh_host=172.31.0.37
+neo4j1 ansible_ssh_host=10.1.128.37
 
 ; Research Component
 
 [research_ancillary_services]
-research_ancillary_services ansible_ssh_host=172.31.0.18
+research_ancillary_services ansible_ssh_host=10.1.128.18
 
 [research_eod]
-research_eod ansible_ssh_host=172.31.0.19
+research_eod ansible_ssh_host=10.1.128.19
 
 [research_gauss]
-research_gauss_1 ansible_ssh_host=172.31.0.20
+research_gauss_1 ansible_ssh_host=10.1.128.20
 
 [research_stata]
-research_stata ansible_ssh_host=172.31.0.21
+research_stata ansible_ssh_host=10.1.128.21
 
 [research_python]
-research_python ansible_ssh_host=172.31.0.22
+research_python ansible_ssh_host=10.1.128.22
 
 [research_matlab]
-research_matlab ansible_ssh_host=172.31.0.23
+research_matlab ansible_ssh_host=10.1.128.23
 
 [research_spss]
-research_spss ansible_ssh_host=172.31.0.24
+research_spss ansible_ssh_host=10.1.128.24
 
 [research_sas]
-research_sas ansible_ssh_host=172.31.0.25
+research_sas ansible_ssh_host=10.1.128.25
 
 [research_environment:children]
 research_ancillary_services
@@ -75,13 +75,17 @@ research_sas
 
 ; Pipeline Component
 [ci_server]
-ci_server ansible_ssh_host=172.31.0.26
+ci_server ansible_ssh_host=10.1.128.26
 
 [ci_agent]
-ci_agent_1 ansible_ssh_host=172.31.0.27
+ci_agent_1 ansible_ssh_host=10.1.128.27
+ci_agent_2 ansible_ssh_host=10.1.129.27
+ci_agent_3 ansible_ssh_host=10.1.129.28
+ci_agent_4 ansible_ssh_host=10.1.129.29
+ci_agent_5 ansible_ssh_host=10.1.129.30
 
 [ci_terminal]
-ci_terminal_1 ansible_ssh_host=172.31.0.28
+ci_terminal_1 ansible_ssh_host=10.1.128.28
 
 [pipeline:children]
 ci_server
@@ -91,20 +95,20 @@ ci_terminal
 ; Data Warehouse Component
 
 [db_server]
-db_server_edb ansible_ssh_host=172.31.0.29
-db_server_centos6 ansible_ssh_host=172.31.0.39
-db_server_centos7 ansible_ssh_host=172.31.0.38
+db_server_edb ansible_ssh_host=10.1.128.29
+db_server_centos6 ansible_ssh_host=10.1.128.39
+db_server_centos7 ansible_ssh_host=10.1.128.38
 
 [citus_coordinator]
-citus_coordinator ansible_ssh_host=172.31.0.40
+citus_coordinator ansible_ssh_host=10.1.128.40
 
 [citus_coordinator_standby]
-citus_coordinator_standby ansible_ssh_host=172.31.0.44
+citus_coordinator_standby ansible_ssh_host=10.1.128.44
 
 [citus_worker]
-citus_worker_1 ansible_ssh_host=172.31.0.41
-citus_worker_2 ansible_ssh_host=172.31.0.42
-citus_worker_3 ansible_ssh_host=172.31.0.43
+citus_worker_1 ansible_ssh_host=10.1.128.41
+citus_worker_2 ansible_ssh_host=10.1.128.42
+citus_worker_3 ansible_ssh_host=10.1.128.43
 
 [citus:children]
 citus_coordinator
@@ -116,7 +120,7 @@ db_server
 citus
 
 [db_terminal]
-db_terminal ansible_ssh_host=172.31.0.30
+db_terminal ansible_ssh_host=10.1.128.30
 
 [datawarehouse:children]
 db_server
@@ -125,15 +129,15 @@ db_terminal
 ; Container Component
 
 [mesos_master]
-mesos_master_1 ansible_ssh_host=172.31.0.31 zookeeper_id=1
-mesos_master_2 ansible_ssh_host=172.31.0.32 zookeeper_id=2
-mesos_master_3 ansible_ssh_host=172.31.0.33 zookeeper_id=3
+mesos_master_1 ansible_ssh_host=10.1.128.31 zookeeper_id=1
+mesos_master_2 ansible_ssh_host=10.1.128.32 zookeeper_id=2
+mesos_master_3 ansible_ssh_host=10.1.128.33 zookeeper_id=3
 
 [mesos_agent]
-mesos_agent_1 ansible_ssh_host=172.31.0.34
-mesos_agent_2 ansible_ssh_host=172.31.0.35
-mesos_agent_3 ansible_ssh_host=172.31.0.36
-mesos_agent_4 ansible_ssh_host=172.31.0.37
+mesos_agent_1 ansible_ssh_host=10.1.128.34
+mesos_agent_2 ansible_ssh_host=10.1.128.35
+mesos_agent_3 ansible_ssh_host=10.1.128.36
+mesos_agent_4 ansible_ssh_host=10.1.128.37
 
 [mesos:children]
 mesos_master

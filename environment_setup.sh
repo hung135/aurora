@@ -34,4 +34,4 @@ source ~/.bash_profile
 
 
 # ansible-playbook -i vagrant_hosts  --private-key=$key_pair_path -u centos \
-#  deploy_mesos_agent.yml --limit ='mesos_agent_1'
+#  deploy_gocd.yml --limit ='ci_server'

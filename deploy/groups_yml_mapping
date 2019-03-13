@@ -6,10 +6,11 @@ app_server:
   deploy_yaml: deploy_app_server.yml
 ci_agent:
   deploy_yaml: deploy_gocd.yml
-  ami: ['ami-011b3ccf1bd6db744','ec2-user']
+  ami: ['ami-0063927a','centos']
+  instance_type: t3.xlarge
 ci_server:
   deploy_yaml: deploy_gocd.yml
-  ami: ['ami-011b3ccf1bd6db744','ec2-user']
+  ami: ['ami-0063927a','centos']
 ci_terminal:
   deploy_yaml: deploy_gocd.yml
 citus_coordinator:
@@ -30,16 +31,17 @@ file_server:
   deploy_yaml: deploy_file_server.yml
   root_storage: 30
   additional_storage: 30 # Gbs
-  instance_type: t2.micro
+ 
   ami: ['ami-0063927a','centos']
 kerberos_server:
   deploy_yaml: deploy_kerberos_server.yml
 mesos_agent:
   deploy_yaml: deploy_mesos_agent.yml
   ami: ['ami-0063927a','centos']
+  instance_type: t3.medium
 mesos_master:
   deploy_yaml: deploy_mesos_master.yml
-  instance_type: t2.medium
+  instance_type: t2.xlarge
   ami: ['ami-0063927a','centos']
 neo4j_server:
   deploy_yaml: deploy_neo4j_server.yml

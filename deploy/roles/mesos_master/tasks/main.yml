@@ -194,7 +194,8 @@
 - name: Add the ip address to the mesos-master folder
   copy:
     dest: /etc/mesos-master/ip
-    content: "{{ ansible_ssh_host }}"
+    #content: "{{ ansible_ssh_host }}"
+    content: "0.0.0.0"
   notify:
     - restart mesos-master
   tags:
