@@ -1,7 +1,7 @@
 #!/bin/bash
 #setup for cloud9 Rehhat environment
 #cd /etc/yum.repos.d/
-sudo wget http://download.opensuse.org/repositories/shells:fish:release:3/RHEL_7/shells:fish:release:3.repo /etc/yum.repos.d/
+sudo wget -O /etc/yum.repos.d/shells:fish:release:3.repo http://download.opensuse.org/repositories/shells:fish:release:3/RHEL_7/shells:fish:release:3.repo 
 sudo yum install -y fish 
 sudo yum install -y https://releases.hashicorp.com/vagrant/2.2.4/vagrant_2.2.4_x86_64.rpm
 sudo yum install -y ansible 
