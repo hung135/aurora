@@ -28,10 +28,12 @@ echo 'fish' >>~/.bash_profile
 git config credential.helper store
 aws configure
 
-echo "Vagrant cannot connect to Instances make sure Security Groups are setup correctly for this Host:"
+echo "---*** IF Vagrant cannot connect to Instances make sure Security Groups are setup correctly for this Host:*****"
 echo "      t$HOSTNAME"
+
+python3 -m venv ~/.py36
+virtualenv -p /usr/bin/python ~/.py27c
+yum install openvpn -y
 source ~/.bash_profile
-
-
 # ansible-playbook -i vagrant_hosts  --private-key=$key_pair_path -u centos \
 #  deploy_gocd.yml --limit ='ci_server'
