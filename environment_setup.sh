@@ -5,7 +5,8 @@ sudo wget -O /etc/yum.repos.d/shells:fish:release:3.repo http://download.opensus
 sudo yum install -y fish 
 sudo yum install -y https://releases.hashicorp.com/vagrant/2.2.4/vagrant_2.2.4_x86_64.rpm
 sudo yum install -y ansible 
-
+#docker pull postgres
+# docker run --name some-postgres -p 5432:5432 -e  POSTGRES_PASSWORD=secret99 -d postgres
 #git clone https://github.com/hung135/aurora
 export key_pair_name=$HOSTNAME-$C9_USER
 chmod 600 ~/.ssh/$key_pair_name.pem
@@ -32,8 +33,13 @@ echo "---*** IF Vagrant cannot connect to Instances make sure Security Groups ar
 echo "      t$HOSTNAME"
 
 python3 -m venv ~/.py36
-virtualenv -p /usr/bin/python ~/.py27c
+virtualenv -p /usr/bin/python ~/.py27
 yum install openvpn -y
 source ~/.bash_profile
 # ansible-playbook -i vagrant_hosts  --private-key=$key_pair_path -u centos \
 #  deploy_gocd.yml --limit ='ci_server'
+~/.py27/bin/pip install cookiecutter
+sudo yum install -y perl-devel perl-CPAN \
+&& curl -L https://cpanmin.us | perl - --sudo App::cpanminus
+sudo /usr/local/bin/cpanm --quiet --notest App::Sqitch
+sudo yum install mysql perl-DBD-mysql postgresql 
