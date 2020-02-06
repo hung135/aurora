@@ -1,2 +1,2 @@
-ansible-playbook deploy/deploy_citus_server.yml -i deploy/vagrant_hosts --ask-pass --user=super --su-user=super --become
-host_key_checking = False
+ansible-playbook deploy/deploy_citus_server.yml -i deploy/vagrant_hosts --ask-pass --user=super --su-user=super  
+  

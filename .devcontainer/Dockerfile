@@ -42,14 +42,10 @@ RUN apt-get update \
     && groupadd --gid $USER_GID $USERNAME \
     && useradd -s /bin/bash --uid $USER_UID --gid $USER_GID -m $USERNAME \
     # [Optional] Add sudo support for the non-root user
-    && apt-get install -y sudo ansible fish vim sshpass\
+    && apt-get install -y sudo ansible fish vim sshpass make\
     && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME\
-    && chmod 0440 /etc/sudoers.d/$USERNAME \
-    #
-    # Clean up
-    && apt-get autoremove -y \
-    && apt-get clean -y \
-    && rm -rf /var/lib/apt/lists/*
-
+    && chmod 0440 /etc/sudoers.d/$USERNAME  
+    
+RUN sed -i 's/#host_key_checking = False/host_key_checking = False/' /etc/ansible/ansible.cfg
 # Switch back to dialog for any ad-hoc use of apt-get
 ENV DEBIAN_FRONTEND=dialog
