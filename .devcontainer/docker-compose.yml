@@ -32,4 +32,24 @@ services:
 
     # Overrides default command so things don't shut down after the process ends.
     command: sleep infinity 
-    
+    networks:
+      ansible_nw:
+        ipv4_address: 10.0.1.2
+
+#Dynamicall generated from inventory file
+  host1: 
+    image: centos7-sshd:latest
+    restart: always
+    privileged: true
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    networks:
+      ansible_nw:
+        ipv4_address: 10.0.1.40
+
+#comes from docker-compose-networks.yaml
+networks:
+  ansible_nw:
+    ipam:
+      config:
+        - subnet: 10.0.1.0/24

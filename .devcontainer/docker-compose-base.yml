@@ -32,4 +32,8 @@ services:
 
     # Overrides default command so things don't shut down after the process ends.
     command: sleep infinity 
-    
+    networks:
+      ansible_nw:
+        ipv4_address: 10.0.1.2
+   
+   
