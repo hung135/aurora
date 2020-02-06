@@ -12,7 +12,8 @@ services:
     # you may need to update USER_UID and USER_GID in .devcontainer/Dockerfile to match your
     # user if not 1000. See https://aka.ms/vscode-remote/containers/non-root for details.
     # user: vscode
-
+    environment:
+      CONTAINERNAME: docker-in-docker
     build: 
       context: .
       dockerfile: Dockerfile
@@ -47,7 +48,24 @@ services:
     networks:
       ansible_nw:
         ipv4_address: 10.0.1.40
-
+  host2: 
+    image: centos7-sshd:latest
+    restart: always
+    privileged: true
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    networks:
+      ansible_nw:
+        ipv4_address: 10.0.1.41
+  host3: 
+    image: centos7-sshd:latest
+    restart: always
+    privileged: true
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    networks:
+      ansible_nw:
+        ipv4_address: 10.0.1.42
 #comes from docker-compose-networks.yaml
 networks:
   ansible_nw:
