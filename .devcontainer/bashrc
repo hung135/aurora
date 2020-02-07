@@ -1,7 +1,12 @@
 cat /workspace/.devcontainer/welcome.txt
 echo "Fish is your friend!!!"
 echo "TYPE ""fish"""
-alias deploy="ansible-playbook /workspace/deploy/deploy_citus_server.yml -i /workspace/deploy/vagrant_hosts --ask-pass --user=super --ask-sudo-pass" 
 
+
+alias deploy="ansible-playbook /workspace/deploy/deploy_citus_server.yml -i /workspace/deploy/vagrant_hosts --ask-pass --user=super --ask-sudo-pass" 
 alias rbp="make -f /workspace/.devcontainer/Makefile rebuild"
 alias rebuild="make -f /workspace/.devcontainer/Makefile rebuild"
+alias inventory="cat /workspace/deploy/vagrant_hosts | grep ssh_host | sed 's/ ansible_ssh_host=/,/' | sed 's/ .*$//'"
+alias refreshcomposefile="/workspace/.devcontainer/scripts/rebuild-docker-compose.sh"
+
+

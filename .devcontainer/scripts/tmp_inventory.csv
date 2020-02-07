@@ -1,0 +1,5 @@
+citus_coordinator,10.0.1.40
+citus_coordinator_standby,10.0.1.44
+citus_worker_1,10.0.1.41
+citus_worker_2,10.0.1.42
+citus_worker_3,10.0.1.43
