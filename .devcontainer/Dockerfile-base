@@ -8,9 +8,11 @@ RUN yum -y install sudo openssh-server openssh-clients; systemctl enable sshd.se
 RUN adduser super && \
     usermod -a -G wheel super && \
     echo "super:password" | chpasswd
-
+RUN useradd -ms /bin/bash vagrant
 RUN rm /usr/lib/tmpfiles.d/systemd-nologin.conf
 RUN yum update -y
+
+
 EXPOSE 22
 
 CMD ["/usr/sbin/init"]
