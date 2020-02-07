@@ -2,7 +2,7 @@ FROM centos/systemd
 
 MAINTAINER "Hung Nguyen" <you@example.com>
 #https://hub.docker.com/r/centos/systemd/dockerfile
-RUN yum -y install sudo openssh-server openssh-clients; systemctl enable sshd.service
+RUN yum -y install sudo openssh-server openssh-clients initscripts; systemctl enable sshd.service
 
 # Create user 
 RUN adduser super && \
