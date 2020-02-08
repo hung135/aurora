@@ -15,10 +15,13 @@
     cat  /workspace/.devcontainer/scripts/tmp_inventory.csv
 
   Rebuild steps:
+    cd into .devcontainer-->make buildbase (only once)
     Generate working CSV:
     refreshcomposefile
     rebuild
     wait 10 sec and click "RELOAD WINDOW"
-    ansible-playbook -i /workspace/deploy/vagrant_hosts --ask-pass --ask-sudo-pass --user=super  path_to_playbook.yml
+    runansible /path/to/play/book/playbook.yml
+
+  PGDATA wth is that
 
     

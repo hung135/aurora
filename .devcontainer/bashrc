@@ -8,5 +8,6 @@ alias rbp="make -f /workspace/.devcontainer/Makefile rebuild"
 alias rebuild="make -f /workspace/.devcontainer/Makefile rebuild"
 alias inventory="cat /workspace/deploy/vagrant_hosts | grep ssh_host | sed 's/ ansible_ssh_host=/,/' | sed 's/ .*$//'"
 alias refreshcomposefile="/workspace/.devcontainer/scripts/rebuild-docker-compose.sh"
+alias runansible="ansible-playbook --ask-pass --ask-sudo-pass --user=super  -i /workspace/deploy/vagrant_hosts"
 
 
