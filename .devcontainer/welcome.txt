@@ -21,7 +21,8 @@
     rebuild
     wait 10 sec and click "RELOAD WINDOW"
     runansible /path/to/play/book/playbook.yml
-
-  PGDATA wth is that
+    
+ Fish is your friend!!!"
+    TYPE fish 
 
     

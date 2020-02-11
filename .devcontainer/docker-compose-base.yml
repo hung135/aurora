@@ -25,6 +25,8 @@
         # Forwards the local Docker socket to the container.
         - /var/run/docker.sock:/var/run/docker.sock 
         - ./bashrc:/root/.bashrc 
+        # make sure this file exists on your host machine else it will be created as a directory
+        - ~/.local/share/fish/docker_fish_history:/root/.local/share/fish/fish_history
   
       # Uncomment the next four lines if you will use a ptrace-based debuggers like C++, Go, and Rust.
       # cap_add:

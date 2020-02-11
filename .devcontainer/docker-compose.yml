@@ -25,6 +25,7 @@
         # Forwards the local Docker socket to the container.
         - /var/run/docker.sock:/var/run/docker.sock 
         - ./bashrc:/root/.bashrc 
+        - ~/.local/share/fish/docker_fish_history:/root/.local/share/fish/fish_history
   
       # Uncomment the next four lines if you will use a ptrace-based debuggers like C++, Go, and Rust.
       # cap_add:
@@ -38,7 +39,7 @@
         ansible_nw:
           ipv4_address: 10.0.1.253
   #please not the spacing needs to line up w/ the other yaml templates
-    citus_coordinator: 
+    ci_server: 
       image: centos7-sshd:latest
       restart: always
       privileged: true
@@ -46,51 +47,7 @@
         - /sys/fs/cgroup:/sys/fs/cgroup:ro
       networks:
         ansible_nw:
-          ipv4_address: 10.0.1.40
-  
-#please not the spacing needs to line up w/ the other yaml templates
-    citus_coordinator_standby: 
-      image: centos7-sshd:latest
-      restart: always
-      privileged: true
-      volumes:
-        - /sys/fs/cgroup:/sys/fs/cgroup:ro
-      networks:
-        ansible_nw:
-          ipv4_address: 10.0.1.44
-  
-#please not the spacing needs to line up w/ the other yaml templates
-    citus_worker_1: 
-      image: centos7-sshd:latest
-      restart: always
-      privileged: true
-      volumes:
-        - /sys/fs/cgroup:/sys/fs/cgroup:ro
-      networks:
-        ansible_nw:
-          ipv4_address: 10.0.1.41
-  
-#please not the spacing needs to line up w/ the other yaml templates
-    citus_worker_2: 
-      image: centos7-sshd:latest
-      restart: always
-      privileged: true
-      volumes:
-        - /sys/fs/cgroup:/sys/fs/cgroup:ro
-      networks:
-        ansible_nw:
-          ipv4_address: 10.0.1.42
-  
-#please not the spacing needs to line up w/ the other yaml templates
-    citus_worker_3: 
-      image: centos7-sshd:latest
-      restart: always
-      privileged: true
-      volumes:
-        - /sys/fs/cgroup:/sys/fs/cgroup:ro
-      networks:
-        ansible_nw:
-          ipv4_address: 10.0.1.43
+          ipv4_address: 10.0.1.26
   
   networks:
     ansible_nw:

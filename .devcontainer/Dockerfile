@@ -49,3 +49,4 @@ RUN apt-get update \
 RUN sed -i 's/#host_key_checking = False/host_key_checking = False/' /etc/ansible/ansible.cfg
 # Switch back to dialog for any ad-hoc use of apt-get
 ENV DEBIAN_FRONTEND=dialog
+RUN echo source /workspace/.devcontainer/bashrc >>/usr/share/fish/config.fish
